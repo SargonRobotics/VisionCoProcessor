@@ -3,12 +3,13 @@ package org.usfirst.frc.team2335.robot;
 
 import org.usfirst.frc.team2335.robot.subsystems.DriveTrain;
 
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot
 {
+	NetworkTable networkTable;
+	CameraServer server;
+	
 	//Deadzone constant
 	public static final double DEADZONE = 0.2;
 	
@@ -29,6 +33,8 @@ public class Robot extends IterativeRobot
 	
 	//Controller constants
 	public static final int Y_AXIS = 1, X_AXIS = 0;
+	
+	Relay lightSwitch;
 	
 	public static DriveTrain driveTrain;
 	public static OperatorInterface oi;
@@ -48,8 +54,9 @@ public class Robot extends IterativeRobot
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setFPS(60);
+		lightSwitch = new Relay(1);
+		
+		networkTable = NetworkTable.getTable("RPi-Vision");
 		
 		SmartDashboard.putData("Auto mode", chooser);
 	}
@@ -62,7 +69,7 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledInit()
 	{
-
+		lightSwitch.set(Relay.Value.kOff);
 	}
 
 	@Override
@@ -117,6 +124,8 @@ public class Robot extends IterativeRobot
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		
+		lightSwitch.set(Relay.Value.kForward);
 	}
 
 	/**

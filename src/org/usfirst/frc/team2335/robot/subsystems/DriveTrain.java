@@ -25,7 +25,7 @@ public class DriveTrain extends Subsystem
     
     public void drive(double move, double rotate)
     {
-    	drive.arcadeDrive(move, rotate);
+    	drive.arcadeDrive(-move, rotate);
     }
 }
 
