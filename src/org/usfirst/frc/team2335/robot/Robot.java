@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot
 {
-	NetworkTable networkTable;
+	NetworkTable table;
 	CameraServer server;
 	
 	//Deadzone constant
@@ -41,13 +41,8 @@ public class Robot extends IterativeRobot
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
-
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	@Override
-	public void robotInit()
+	
+	public Robot()
 	{
 		driveTrain = new DriveTrain();
 		oi = new OperatorInterface();
@@ -56,8 +51,16 @@ public class Robot extends IterativeRobot
 		
 		lightSwitch = new Relay(1);
 		
-		networkTable = NetworkTable.getTable("RPi-Vision");
-		
+		//table = NetworkTable.getTable("RPi-Vision");
+	}
+
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
+	@Override
+	public void robotInit()
+	{
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
@@ -137,6 +140,12 @@ public class Robot extends IterativeRobot
 		Scheduler.getInstance().run();
 		
 		driveTrain.drive(oi.getAxis(Y_AXIS, 1), oi.getAxis(X_AXIS, 0.6));
+		
+		//SmartDashboard.putNumber("Center X", table.getDouble("CenterX"));
+		//SmartDashboard.putNumber("Center Y", table.getDouble("CenterY"));
+		//SmartDashboard.putNumber("Width", table.getDouble("Width"));
+		//SmartDashboard.putNumber("Height", table.getDouble("Height"));
+
 	}
 
 	/**
